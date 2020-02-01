@@ -1,6 +1,5 @@
 function [] = initPositionAndVelocity(randnOrMB)
 
-global C;
 global numElectrons;
 global x_pos_init;
 global y_pos_init;
@@ -22,15 +21,7 @@ if(randnOrMB == "randn")
 
 elseif(randnOrMB == "MB")   
     
-    vxProb = rand(1, numElectrons);
-    vyProb = rand(1, numElectrons);
-    
-    mean = 0;
-    s = sqrt((C.k_b)*(C.T)/(C.m));
-    MB_dist = makedist('Normal', 'mu', mean, 'sigma', s);
-    
-    V_x_init = icdf(MB_dist, vxProb);
-    V_y_init = icdf(MB_dist, vyProb);
+    [V_x_init, V_y_init] = thermalize(numElectrons);
     
 else
     
@@ -40,7 +31,5 @@ else
     V_y_init = magThermalSpeed*sin(directionAngles);
     
 end
-
-
 
 end

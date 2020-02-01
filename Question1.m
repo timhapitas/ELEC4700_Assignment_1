@@ -29,11 +29,11 @@ y = zeros(1, numElectrons);
 boxWidthScaleFactor = 2e-9; %nm%
 boxLengthScaleFactor = 1e-9; %nm%
 
-numElectrons = 100;
+numElectrons = 1000;
 magThermalSpeed = sqrt(2*C.k_b*C.T/C.m);
 maxTimeStep = 1000;
 
-initPositionAndVelocity("MB");
+initPositionAndVelocity("rand");
 
 dt = (1/200)*100*boxWidthScaleFactor/magThermalSpeed;
 
@@ -41,18 +41,16 @@ vx = V_x_init;
 vy = V_y_init;
 x = x_pos_init;
 y = y_pos_init;
-v_rms = 0;
 T = zeros(1, maxTimeStep);
 t_vec = linspace(1, maxTimeStep*dt, maxTimeStep);
-
-vx_beg = vx;
-figure;
 
 numElectronsToTrack = 10;
 electronsToTrack = randi(numElectrons, 1, numElectronsToTrack);
 
 x_oldvals = zeros(maxTimeStep, numElectronsToTrack);
 y_oldvals = zeros(maxTimeStep, numElectronsToTrack);
+
+v_rms = 0;
 
 for t = 1:maxTimeStep
     
