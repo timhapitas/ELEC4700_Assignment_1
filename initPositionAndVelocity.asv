@@ -22,15 +22,12 @@ if(randnOrMB == "randn")
 
 elseif(randnOrMB == "MB")   
     
-    vxProb = rand(1, numElectrons);
-    vyProb = rand(1, numElectrons);
-    
     mean = 0;
-    s = sqrt((C.k_b)*(C.T)/(C.m));
+    s = sqrt((C.k)*(C.T)/(C.m));
     MB_dist = makedist('Normal', 'mu', mean, 'sigma', s);
-    
-    V_x_init = icdf(MB_dist, vxProb);
-    V_y_init = icdf(MB_dist, vyProb);
+ 
+    V_x_init = CDF_MB_inv(vxProb);
+    V_y_init = CDF_MB_inv(vxProb);
     
 else
     

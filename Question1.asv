@@ -29,13 +29,13 @@ y = zeros(1, numElectrons);
 boxWidthScaleFactor = 2e-9; %nm%
 boxLengthScaleFactor = 1e-9; %nm%
 
-numElectrons = 100;
+numElectrons = 20;
 magThermalSpeed = sqrt(2*C.k_b*C.T/C.m);
 maxTimeStep = 1000;
 
-initPositionAndVelocity("MB");
+initPositionAndVelocity;
 
-dt = (1/200)*100*boxWidthScaleFactor/magThermalSpeed;
+dt = (1/500)*100*boxWidthScaleFactor/magThermalSpeed;
 
 vx = V_x_init;
 vy = V_y_init;
@@ -43,16 +43,13 @@ x = x_pos_init;
 y = y_pos_init;
 v_rms = 0;
 T = zeros(1, maxTimeStep);
-t_vec = linspace(1, maxTimeStep*dt, maxTimeStep);
+t_vec = linspace(1, maxTimeStep, maxTimeStep);
 
 vx_beg = vx;
 figure;
 
-numElectronsToTrack = 10;
-electronsToTrack = randi(numElectrons, 1, numElectronsToTrack);
-
-x_oldvals = zeros(maxTimeStep, numElectronsToTrack);
-y_oldvals = zeros(maxTimeStep, numElectronsToTrack);
+x_oldvals = zeros(maxTimeStep, numElectrons);
+y_oldvals = zeros(maxTimeStep, numElectrons);
 
 for t = 1:maxTimeStep
     
@@ -86,8 +83,8 @@ for t = 1:maxTimeStep
     x = x_previous + dx;
     y = y_previous + dy;
     
-    x_oldvals(t,:) = x_previous(electronsToTrack);
-    y_oldvals(t,:) = y_previous(electronsToTrack);
+    x_oldvals(t,:) = x_previous;
+    y_oldvals(t,:) = y_previous;
     
     v_rms = sqrt(sum((vx.^2) + (vy.^2))/numElectrons);
     T(t) = ((v_rms^2)*C.m)/(2*C.k_b);
@@ -101,21 +98,25 @@ for t = 1:maxTimeStep
 end
 
 
+
 figure;
-for pltCnt = 1:numElectronsToTrack
+for pltCnt = 1:length(electronsToTrack)
     
    x_diffs = diff(x_oldvals(:,pltCnt));
-   x_diffs(length(x_diffs) + 1) = 0;
    
-   rejections = find(abs(x_diffs) >= 100e-9);
-   x_oldvals(rejections,pltCnt) = NaN;
+   rejections = find(abs(x_diffs > 1e-10));
+   
+   for count = 1:length(rejections)
+      
+       x_toPlot = [1:]
+       
+   end
     
    plot(x_oldvals(:,pltCnt), y_oldvals(:,pltCnt));
    hold on;
 end
 axis([0 100*boxWidthScaleFactor 0 100*boxLengthScaleFactor]);
 hold off;
-
 
 figure;
 plot(t_vec, T, 'r.');
